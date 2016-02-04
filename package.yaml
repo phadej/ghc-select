@@ -1,0 +1,28 @@
+name: ghc-select
+version: 0.0.0.0
+synopsis: Helper to switch hvr-ppa ghc and cabal versions
+description: |
+  Helper to swwitch hvr-ppa and cabal version
+  .
+  @
+  $(ghc-select ghc-8.0.1 cabal-1.24 alex-3.1.7 happy-1.19.5)
+  @
+author: Oleg Grenrus <oleg.grenrus@iki.fi>
+maintainer: Oleg Grenrus <oleg.grenrus@iki.fi>
+license: BSD3
+github: phadej/ghc-select
+category: Development
+tested-with: GHC==7.6.3, GHC==7.8.4, GHC==7.10.2
+extra-source-files:
+- README.md
+
+ghc-options: -Wall
+
+dependencies:
+- base
+- directory
+
+executables:
+  ghc-select:
+    main: Main.hs
+    source-dirs: src

@@ -1,0 +1,39 @@
+-- This file has been generated from package.yaml by hpack version 0.8.0.
+--
+-- see: https://github.com/sol/hpack
+
+name:           ghc-select
+version:        0.0.0.0
+synopsis:       Helper to switch hvr-ppa ghc and cabal versions
+description:    Helper to swwitch hvr-ppa and cabal version
+                .
+                @
+                $(ghc-select ghc-8.0.1 cabal-1.24 alex-3.1.7 happy-1.19.5)
+                @
+category:       Development
+homepage:       https://github.com/phadej/ghc-select#readme
+bug-reports:    https://github.com/phadej/ghc-select/issues
+author:         Oleg Grenrus <oleg.grenrus@iki.fi>
+maintainer:     Oleg Grenrus <oleg.grenrus@iki.fi>
+license:        BSD3
+license-file:   LICENSE
+tested-with:    GHC==7.6.3, GHC==7.8.4, GHC==7.10.2
+build-type:     Simple
+cabal-version:  >= 1.10
+
+extra-source-files:
+    README.md
+
+source-repository head
+  type: git
+  location: https://github.com/phadej/ghc-select
+
+executable ghc-select
+  main-is: Main.hs
+  hs-source-dirs:
+      src
+  ghc-options: -Wall
+  build-depends:
+      base
+    , directory
+  default-language: Haskell2010
