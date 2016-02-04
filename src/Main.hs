@@ -9,6 +9,7 @@ import System.Environment (getArgs, lookupEnv)
 import System.IO          (hPutStrLn, stderr)
 
 data Program = Cabal | GHC | Alex | Happy
+    deriving (Eq, Ord, Read, Show, Enum, Bounded)
 
 type KnownProgram = (String, (FilePath, FilePath))
 
@@ -50,9 +51,7 @@ main :: IO ()
 main = do
     pathEnv <- fromMaybe "" `fmap` lookupEnv "PATH"
     let paths = parsePath pathEnv
-    cabals <- getKnownPrograms Cabal
-    ghcs <- getKnownPrograms GHC
-    let knownPrograms = sort $ cabals ++ ghcs
+    knownPrograms <- sort . concat <$> traverse getKnownPrograms [minBound..maxBound]
     args <- getArgs
     case args of
         [] -> hPutStrLn stderr "Usage: ghc-select program [program...]"
