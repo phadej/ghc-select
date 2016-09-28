@@ -1,9 +1,11 @@
 module Main (main) where
 
-import Control.Monad      (forM_)
-import Data.Foldable      (foldlM)
+import Control.Exception  (IOException, catch)
+import Data.Foldable      (foldlM, for_)
 import Data.List          (intercalate, isPrefixOf, sort)
 import Data.Maybe         (fromMaybe, mapMaybe)
+import Prelude ()
+import Prelude.Compat
 import System.Directory   (getDirectoryContents)
 import System.Environment (getArgs, lookupEnv)
 import System.IO          (hPutStrLn, stderr)
@@ -15,9 +17,14 @@ type KnownProgram = (String, (FilePath, FilePath))
 
 getKnownPrograms :: Program -> IO [KnownProgram]
 getKnownPrograms prog =
-    mapMaybe f `fmap` getDirectoryContents path
+    mapMaybe f <$> getDirectoryContents path `catch` h
   where
+    h :: IOException -> IO [FilePath]
+    h _ = pure []
+
+    path :: FilePath
     path = "/opt/" ++ progName prog
+
     f :: FilePath -> Maybe KnownProgram
     f p | p `elem` [".", ".."] = Nothing
         | otherwise            = Just (progName prog ++ "-" ++ p, (path, path ++ "/" ++ p ++ "/bin"))
@@ -44,7 +51,7 @@ modifyPath knownPrograms paths program =
             pure $ p : filter (not . (pfx `isPrefixOf`)) paths
         Nothing   -> do
             hPutStrLn stderr $ "Unknown program: " ++ program
-            forM_ knownPrograms $ \(name, _) -> hPutStrLn stderr $ "  - " ++ name
+            for_ knownPrograms $ \(name, _) -> hPutStrLn stderr $ "  - " ++ name
             pure paths
 
 main :: IO ()
